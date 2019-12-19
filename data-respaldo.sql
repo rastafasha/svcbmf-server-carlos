@@ -1668,3 +1668,16 @@ ALTER TABLE `cprinprin3`
 --
 ALTER TABLE `directorio_back`
   ADD PRIMARY KEY (`userID`);
+
+
+
+-- buscador
+
+CREATE OR REPLACE VIEW doctores AS  SELECT * FROM directorios;
+
+
+
+-- buscador
+
+CREATE OR REPLACE VIEW doctores AS 
+select id,'directorios' as type,title,description,titleesp,descriptionesp,price,popup,button,image,is_featured,is_active,created_at from antiages union
