@@ -75,8 +75,20 @@ class Api_model_directorio extends CI_Model
 		$this->db->select('*');
 		$this->db->from('doctores doctore');
 		$this->db->like('nombre', $text, 'both');
-		$this->db->or_like('estado', $text, 'both');
 		$this->db->or_like('especialidad', $text, 'both');
+		$this->db->or_like('universidad', $text, 'both');
+		$this->db->or_like('ano', $text, 'both');
+		$this->db->or_like('website', $text, 'both');
+		$this->db->or_like('email', $text, 'both');
+		$this->db->or_like('direccion', $text, 'both');
+		$this->db->or_like('estado', $text, 'both');
+		$this->db->or_like('ciudad', $text, 'both');
+		$this->db->or_like('telefonos', $text, 'both');
+		$this->db->or_like('facebook', $text, 'both');
+		$this->db->or_like('instagram', $text, 'both');
+		$this->db->or_like('twitter', $text, 'both');
+		$this->db->or_like('linkedin', $text, 'both');
+		
 
 		$query = $this->db->get();
 		return $query->result();

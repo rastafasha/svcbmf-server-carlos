@@ -1,7 +1,7 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
 
-class Api_model_documentos extends CI_Model 
+class Api_model_documento extends CI_Model 
 {
 	
 		
