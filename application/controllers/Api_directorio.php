@@ -7,6 +7,7 @@ class Api_Directorio extends CI_Controller {
 	{
 		parent::__construct();
 		$this->load->model('api_model');
+		$this->load->model('api_model_directorio');
 		$this->load->helper('url');
 		$this->load->helper('text');
 	}
@@ -18,7 +19,7 @@ public function directorios()
 {
     header("Access-Control-Allow-Origin: *");
 
-    $directorios = $this->api_model->get_directorios($featured=false, $recentpost=false);
+    $directorios = $this->api_model_directorio->get_directorios($featured=false, $recentpost=false);
 
     $posts = array();
     if(!empty($directorios)){
@@ -56,7 +57,7 @@ public function featured_directorios()
 {
     header("Access-Control-Allow-Origin: *");
 
-    $directorios = $this->api_model->get_directorios($featured=true, $recentpost=false);
+    $directorios = $this->api_model_directorio->get_directorios($featured=true, $recentpost=false);
 
     $posts = array();
     if(!empty($directorios)){
@@ -94,7 +95,7 @@ public function directorio($id)
 {
     header("Access-Control-Allow-Origin: *");
     
-    $directorio = $this->api_model->get_directorio($id);
+    $directorio = $this->api_model_directorio->get_directorio($id);
 
 
     $post = array(
@@ -126,7 +127,7 @@ public function recent_directorios()
 {
     header("Access-Control-Allow-Origin: *");
 
-    $directorios = $this->api_model->get_directorios($featured=false, $recentpost=5);
+    $directorios = $this->api_model_directorio->get_directorios($featured=false, $recentpost=5);
 
     $posts = array();
     if(!empty($directorios)){
@@ -176,7 +177,7 @@ public function adminDirectorios()
 
     $posts = array();
     if($isValidToken) {
-        $directorios = $this->api_model->get_admin_directorios();
+        $directorios = $this->api_model_directorio->get_admin_directorios();
         foreach($directorios as $directorio) {
             $posts[] = array(
                 'id' => $directorio->id,
@@ -217,7 +218,7 @@ public function adminDirectorio($id)
 
     if($isValidToken) {
 
-        $directorio = $this->api_model->get_admin_directorio($id);
+        $directorio = $this->api_model_directorio->get_admin_directorio($id);
 
         $post = array(
             'id' => $directorio->id,
@@ -319,7 +320,7 @@ public function createDirectorio()
                 'created_at' => date('Y-m-d H:i:s', time())
             );
 
-            $id = $this->api_model->insertDirectorio($directorioData);
+            $id = $this->api_model_directorio->insertDirectorio($directorioData);
 
             $response = array(
                 'status' => 'success'
@@ -345,7 +346,7 @@ public function updateDirectorio($id)
 
     if($isValidToken) {
 
-        $directorio = $this->api_model->get_admin_directorio($id);
+        $directorio = $this->api_model_directorio->get_admin_directorio($id);
         $filename = $directorio->image;
 
         $nombre = $this->input->post('nombre');
@@ -412,7 +413,7 @@ public function updateDirectorio($id)
                 'linkedin' => $linkedin,
             );
 
-            $this->api_model->updateDirectorio($id, $directorioData);
+            $this->api_model_directorio->updateDirectorio($id, $directorioData);
 
             $response = array(
                 'status' => 'success'
@@ -438,14 +439,14 @@ public function deleteDirectorio($id)
 
     if($isValidToken) {
 
-        $directorio = $this->api_model->get_admin_directorio($id);
+        $directorio = $this->api_model_directorio->get_admin_directorio($id);
 
         if($directorio->image && file_exists(FCPATH.'media/images/directorio/'.$directorio->image))
         {
             unlink(FCPATH.'media/images/directorio/'.$directorio->image);
         }
 
-        $this->api_model->deleteDirectorio($id);
+        $this->api_model_directorio->deleteDirectorio($id);
 
         $response = array(
             'status' => 'success'
@@ -459,6 +460,41 @@ public function deleteDirectorio($id)
 }
 //
 
+	
+
+// buscar 
+
+
+public function search()
+{
+	header("Access-Control-Allow-Origin: *");
+	header("Content-Type:application/json; charset=UTF-8");
+
+
+	$text = $this->input->get('text');
+
+
+	$data['doctores'] = $this->api_model_directorio->search_products($text);
+	// echo $text;
+	 //print_r($data); // traemos el array
+	$data = json_encode( $data, JSON_FORCE_OBJECT );// se convierte a json
+	echo $data."\n";
+
+
+
+	$this->output
+		->set_content_type('application/json');
+	
+}
+
+public function adminSearch (){
+
+$text = $this->input->get('text');
+
+$this->load->view('doctores');
+
+
+}
 
 
 	

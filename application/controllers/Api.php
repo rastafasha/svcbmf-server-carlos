@@ -634,6 +634,36 @@ class Api extends CI_Controller {
 				->set_output(json_encode($response));
 	}
 
+	public function loginmiembro() 
+	{
+		header("Access-Control-Allow-Origin: *");
+		header("Access-Control-Request-Headers: GET,POST,OPTIONS,DELETE,PUT");
+		header('Access-Control-Allow-Headers: Accept,Accept-Language,Content-Language,Content-Type');
+
+		$formdata = json_decode(file_get_contents('php://input'), true);
+
+		$username = $formdata['username'];
+		$password = $formdata['password'];
+
+		$miembro = $this->api_model->loginmiembro($username, $password);
+
+		if($miembro) {
+			$response = array(
+				'user_id' => $miembro->id,
+				'first_name' => $miembro->first_name,
+				'last_name' => $miembro->last_name,
+				'token' => $miembro->token
+			);
+		}
+		else {
+			$response = array();
+		}
+
+		$this->output
+				->set_content_type('application/json')
+				->set_output(json_encode($response));
+	}
+
 	//Crud Blog
 
 	public function adminBlogs()
@@ -3034,6 +3064,42 @@ public function afiliaciones()
 		}
 	}
 	//
+
+
+
+// buscar 
+
+
+public function search()
+{
+	header("Access-Control-Allow-Origin: *");
+	header("Content-Type:application/json; charset=UTF-8");
+
+
+	$text = $this->input->get('text');
+
+
+	$data['doctores'] = $this->api_model->search_products($text);
+	// echo $text;
+	 //print_r($data); // traemos el array
+	$data = json_encode( $data, JSON_FORCE_OBJECT );// se convierte a json
+	echo $data."\n";
+
+
+
+	$this->output
+		->set_content_type('application/json');
+	
+}
+
+public function adminSearch (){
+
+$text = $this->input->get('text');
+
+$this->load->view('doctores');
+
+
+}
 
 	
 }

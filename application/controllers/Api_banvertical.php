@@ -7,6 +7,7 @@ class Api_Banvertical extends CI_Controller {
 	{
 		parent::__construct();
 		$this->load->model('api_model');
+		$this->load->model('api_model_banvertical');
 		$this->load->helper('url');
 		$this->load->helper('text');
 	}
@@ -18,7 +19,7 @@ public function banverticals()
 {
 	header("Access-Control-Allow-Origin: *");
 
-	$banverticals = $this->api_model->get_banverticals($featured=false, $recentpost=false);
+	$banverticals = $this->api_model_banvertical->get_banverticals($featured=false, $recentpost=false);
 
 	$posts = array();
 	if(!empty($banverticals)){
@@ -30,6 +31,7 @@ public function banverticals()
 				'titulo' => $banvertical->titulo,
 				'target' => $banvertical->target,
 				'enlace' => $banvertical->enlace,
+				'is_active' => $banvertical->is_active,
 				'image' => base_url('media/images/ads/vertical/'.$banvertical->image),
 				'created_at' => $banvertical->created_at
 			);
@@ -45,7 +47,7 @@ public function featured_banverticals()
 {
 	header("Access-Control-Allow-Origin: *");
 
-	$banverticals = $this->api_model->get_banverticals($featured=true, $recentpost=false);
+	$banverticals = $this->api_model_banvertical->get_banverticals($featured=true, $recentpost=false);
 
 	$posts = array();
 	if(!empty($banverticals)){
@@ -57,6 +59,7 @@ public function featured_banverticals()
 				'titulo' => $banvertical->titulo,
 				'target' => $banvertical->target,
 				'enlace' => $banvertical->enlace,
+				'is_active' => $banvertical->is_active,
 				'image' => base_url('media/images/ads/vertical/'.$banvertical->image),
 				'created_at' => $banvertical->created_at
 			);
@@ -72,7 +75,7 @@ public function banvertical($id)
 {
 	header("Access-Control-Allow-Origin: *");
 	
-	$banvertical = $this->api_model->get_banvertical($id);
+	$banvertical = $this->api_model_banvertical->get_banvertical($id);
 
 
 	$post = array(
@@ -80,6 +83,7 @@ public function banvertical($id)
 		'titulo' => $banvertical->titulo,
 		'target' => $banvertical->target,
 		'enlace' => $banvertical->enlace,
+		'is_active' => $banvertical->is_active,
 		'image' => base_url('media/images/ads/vertical/'.$banvertical->image),
 		'created_at' => $banvertical->created_at
 	);
@@ -93,7 +97,7 @@ public function recent_banverticals()
 {
 	header("Access-Control-Allow-Origin: *");
 
-	$banverticals = $this->api_model->get_banverticals($featured=false, $recentpost=5);
+	$banverticals = $this->api_model_banvertical->get_banverticals($featured=false, $recentpost=5);
 
 	$posts = array();
 	if(!empty($banverticals)){
@@ -105,6 +109,7 @@ public function recent_banverticals()
 				'titulo' => $banvertical->titulo,
 				'target' => $banvertical->target,
 				'enlace' => $banvertical->enlace,
+				'is_active' => $banvertical->is_active,
 				'image' => base_url('media/images/ads/vertical/'.$banvertical->image),
 				'created_at' => $banvertical->created_at
 			);
@@ -132,13 +137,14 @@ public function adminBanverticals()
 
 	$posts = array();
 	if($isValidToken) {
-		$banverticals = $this->api_model->get_admin_banverticals();
+		$banverticals = $this->api_model_banvertical->get_admin_banverticals();
 		foreach($banverticals as $banvertical) {
 			$posts[] = array(
 				'id' => $banvertical->id,
 				'titulo' => $banvertical->titulo,
 				'target' => $banvertical->target,
 				'enlace' => $banvertical->enlace,
+				'is_active' => $banvertical->is_active,
 				'image' => base_url('media/images/ads/vertical/'.$banvertical->image),
 				'created_at' => $banvertical->created_at
 			);
@@ -162,13 +168,14 @@ public function adminBanvertical($id)
 
 	if($isValidToken) {
 
-		$banvertical = $this->api_model->get_admin_banvertical($id);
+		$banvertical = $this->api_model_banvertical->get_admin_banvertical($id);
 
 		$post = array(
 			'id' => $banvertical->id,
 			'titulo' => $banvertical->titulo,
 			'target' => $banvertical->target,
 			'enlace' => $banvertical->enlace,
+			'is_active' => $banvertical->is_active,
 			'image' => base_url('media/images/ads/vertical/'.$banvertical->image),
 			'created_at' => $banvertical->created_at,
 			'is_active' => $banvertical->is_active
@@ -235,7 +242,7 @@ public function createBanvertical()
 				'created_at' => date('Y-m-d H:i:s', time())
 			);
 
-			$id = $this->api_model->insertBanvertical($banverticalData);
+			$id = $this->api_model_banvertical->insertBanvertical($banverticalData);
 
 			$response = array(
 				'status' => 'success'
@@ -261,7 +268,7 @@ public function updateBanvertical($id)
 
 	if($isValidToken) {
 
-		$banvertical = $this->api_model->get_admin_banvertical($id);
+		$banvertical = $this->api_model_banvertical->get_admin_banvertical($id);
 		$filename = $banvertical->image;
 
 
@@ -310,7 +317,7 @@ public function updateBanvertical($id)
 				'is_active' => $is_active
 			);
 
-			$this->api_model->updateBanvertical($id, $banverticalData);
+			$this->api_model_banvertical->updateBanvertical($id, $banverticalData);
 
 			$response = array(
 				'status' => 'success'
@@ -336,14 +343,14 @@ public function deleteBanvertical($id)
 
 	if($isValidToken) {
 
-		$banvertical = $this->api_model->get_admin_banvertical($id);
+		$banvertical = $this->api_model_banvertical->get_admin_banvertical($id);
 
 		if($banvertical->image && file_exists(FCPATH.'media/images/ads/vertical/'.$banvertical->image))
 		{
 			unlink(FCPATH.'media/images/ads/vertical/'.$banvertical->image);
 		}
 
-		$this->api_model->deleteBanvertical($id);
+		$this->api_model_banvertical->deleteBanvertical($id);
 
 		$response = array(
 			'status' => 'success'

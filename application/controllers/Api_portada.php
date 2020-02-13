@@ -1,36 +1,33 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
 
-class Api_Documento extends CI_Controller {
+class Api_portada extends CI_Controller {
 
 	public function __construct()
 	{
 		parent::__construct();
 		$this->load->model('api_model');
-		$this->load->model('api_model_documento');
 		$this->load->helper('url');
 		$this->load->helper('text');
 	}
 
 
-	//Documentos
+//imgrevista
 
-	public function documentos()
+public function imgrevistas()
 	{
 		header("Access-Control-Allow-Origin: *");
 
-		$documentos = $this->api_model_documento->get_documentos($featured=false, $recentpost=false);
+		$imgrevistas = $this->api_model->get_imgrevistas($featured=false, $recentpost=false);
 
 		$posts = array();
-		if(!empty($documentos)){
-			foreach($documentos as $documento){
+		if(!empty($imgrevistas)){
+			foreach($imgrevistas as $imgrevista){
 
 
 				$posts[] = array(
-					'id' => $documento->id,
-					'titulo' => $documento->titulo,
-					'archivo' => base_url('media/pdf/documento/'.$documento->archivo),
-					'created_at' => $documento->created_at
+					'id' => $imgrevista->id,
+					'image' => base_url('media/images/revista/'.$imgrevista->image)
 				);
 			}
 		}
@@ -41,17 +38,15 @@ class Api_Documento extends CI_Controller {
 	}
 
 
-	public function documento($id)
+	public function imgrevista($id)
 	{
 		header("Access-Control-Allow-Origin: *");
 		
-		$documento = $this->api_model_documento->get_documento($id);
+		$imgrevista = $this->api_model->get_imgrevista($id);
 
 		$post = array(
-			'id' => $documento->id,
-			'titulo' => $documento->titulo,
-			'archivo' => base_url('media/pdf/documento/'.$documento->archivo),
-			'created_at' => $documento->created_at
+			'id' => $imgrevista->id,
+			'image' => base_url('media/images/revista/'.$imgrevista->image)
 		);
 		
 		$this->output
@@ -59,22 +54,19 @@ class Api_Documento extends CI_Controller {
 			->set_output(json_encode($post));
 	}
 
-	public function recent_documentos()
+	public function recent_imgrevistas()
 	{
 		header("Access-Control-Allow-Origin: *");
 
-		$afiliaciones = $this->api_model_documento->get_documentos($featured=false, $recentpost=5);
+		$imgrevistas = $this->api_model->get_imgrevistas($featured=false, $recentpost=5);
 
 		$posts = array();
-		if(!empty($documentos)){
-			foreach($documentos as $documento){
-				
+		if(!empty($imgrevistas)){
+			foreach($imgrevistas as $imgrevista){
 
 				$posts[] = array(
-					'id' => $documento->id,
-					'titulo' => $documento->titulo,
-					'archivo' => base_url('media/pdf/documento/'.$documento->archivo),
-					'created_at' => $documento->created_at
+					'id' => $imgrevista->id,
+					'image' => base_url('media/images/revista/'.$imgrevista->image)
 				);
 			}
 		}
@@ -89,7 +81,7 @@ class Api_Documento extends CI_Controller {
 
 	//CRUD Afiliaciones
 
-	public function adminDocumentos()
+	public function adminimgrevistas()
 	{
 		header("Access-Control-Allow-Origin: *");
 		header("Access-Control-Allow-Headers: authorization, Content-Type");
@@ -100,13 +92,11 @@ class Api_Documento extends CI_Controller {
 
 		$posts = array();
 		if($isValidToken) {
-			$documentos = $this->api_model_documento->get_admin_documentos();
-			foreach($documentos as $documento) {
+			$imgrevistas = $this->api_model->get_admin_imgrevistas();
+			foreach($imgrevistas as $imgrevista) {
 				$posts[] = array(
-					'id' => $documento->id,
-					'titulo' => $documento->titulo,
-					'archivo' => base_url('media/pdf/documento/'.$documento->archivo),
-					'created_at' => $documento->created_at
+					'id' => $imgrevista->id,
+					'image' => base_url('media/images/revista/'.$imgrevista->image)
 				);
 			}
 
@@ -117,7 +107,7 @@ class Api_Documento extends CI_Controller {
 		}
 	}
 
-	public function adminDocumento($id)
+	public function adminimgrevista($id)
 	{
 		header("Access-Control-Allow-Origin: *");
 		header("Access-Control-Allow-Headers: authorization, Content-Type");
@@ -128,13 +118,11 @@ class Api_Documento extends CI_Controller {
 
 		if($isValidToken) {
 
-			$documento = $this->api_model_documento->get_admin_documento($id);
+			$imgrevista = $this->api_model->get_admin_imgrevista($id);
 
 			$post = array(
-				'id' => $documento->id,
-					'titulo' => $documento->titulo,
-					'archivo' => base_url('media/pdf/documento/'.$documento->archivo),
-					'created_at' => $documento->created_at
+				'id' => $imgrevista->id,
+					'image' => base_url('media/images/revista/'.$imgrevista->image)
 			);
 			
 
@@ -145,7 +133,7 @@ class Api_Documento extends CI_Controller {
 		}
 	}
 
-	public function createDocumento()
+	public function createimgrevista()
 	{
 		header("Access-Control-Allow-Origin: *");
 		header("Access-Control-Request-Headers: GET,POST,OPTIONS,DELETE,PUT");
@@ -157,20 +145,19 @@ class Api_Documento extends CI_Controller {
 
 		if($isValidToken) {
 
-			$titulo = $this->input->post('titulo');
-
 			$filename = NULL;
 
 			$isUploadError = FALSE;
 
-			if ($_FILES && $_FILES['archivo']['name']) {
+			
+			if ($_FILES && $_FILES['image']['name']) {
 
-				$config['upload_path']          = './media/pdf/documento/';
-	            $config['allowed_types']        = 'pdf';
-	            $config['max_size']             = 3000;
+				$config['upload_path']          = './media/images/revista/';
+	            $config['allowed_types']        = 'gif|jpg|png|jpeg';
+	            $config['max_size']             = 500;
 
 	            $this->load->library('upload', $config);
-	            if ( ! $this->upload->do_upload('archivo')) {
+	            if ( ! $this->upload->do_upload('image')) {
 
 	            	$isUploadError = TRUE;
 
@@ -186,13 +173,11 @@ class Api_Documento extends CI_Controller {
 			}
 
 			if( ! $isUploadError) {
-	        	$documentoData = array(
-					'titulo' => $titulo,
-					'archivo' => $filename,
-					'created_at' => date('Y-m-d H:i:s', time())
+	        	$imgrevistaData = array(
+					'image' => $filename
 				);
 
-				$id = $this->api_model_documento->insertDocumento($documentoData);
+				$id = $this->api_model->insertimgrevista($imgrevistaData);
 
 				$response = array(
 					'status' => 'success'
@@ -206,7 +191,7 @@ class Api_Documento extends CI_Controller {
 		}
 	}
 
-	public function updateDocumento($id)
+	public function updateimgrevista($id)
 	{
 		header("Access-Control-Allow-Origin: *");
 		header("Access-Control-Allow-Headers: authorization, Content-Type");
@@ -218,22 +203,21 @@ class Api_Documento extends CI_Controller {
 
 		if($isValidToken) {
 
-			$documento = $this->api_model_documento->get_admin_documento($id);
-			$filename = $documento->archivo;
+			$imgrevista = $this->api_model->get_admin_imgrevista($id);
+			$filename = $imgrevista->image;
 
-			$titulo = $this->input->post('titulo');
-			
 
 			$isUploadError = FALSE;
 
-			if ($_FILES && $_FILES['archivo']['name']) {
+			
+			if ($_FILES && $_FILES['image']['name']) {
 
-				$config['upload_path']          = './media/pdf/documento/';
-	            $config['allowed_types']        = 'pdf';
-	            $config['max_size']             = 3000;
+				$config['upload_path']          = './media/images/revista/';
+	            $config['allowed_types']        = 'gif|jpg|png|jpeg';
+	            $config['max_size']             = 500;
 
 	            $this->load->library('upload', $config);
-	            if ( ! $this->upload->do_upload('archivo')) {
+	            if ( ! $this->upload->do_upload('image')) {
 
 	            	$isUploadError = TRUE;
 
@@ -244,9 +228,9 @@ class Api_Documento extends CI_Controller {
 	            }
 	            else {
 	   
-					if($documento->archivo && file_exists(FCPATH.'media/pdf/documento/'.$documento->archivo))
+					if($imgrevista->image && file_exists(FCPATH.'media/images/revista/'.$imgrevista->image))
 					{
-						unlink(FCPATH.'media/pdf/documento/'.$documento->archivo);
+						unlink(FCPATH.'media/images/revista/'.$imgrevista->image);
 					}
 
 	            	$uploadData = $this->upload->data();
@@ -255,12 +239,11 @@ class Api_Documento extends CI_Controller {
 			}
 
 			if( ! $isUploadError) {
-	        	$documentoData = array(
-					'titulo' => $titulo,
-					'archivo' => $filename,
+	        	$imgrevistaData = array(
+					'image' => $filename,
 				);
 
-				$this->api_model_documento->updateDocumento($id, $documentoData);
+				$this->api_model->updateImgrevista($id, $imgrevistaData);
 
 				$response = array(
 					'status' => 'success'
@@ -274,7 +257,7 @@ class Api_Documento extends CI_Controller {
 		}
 	}
 
-	public function deleteDocumento($id)
+	public function deleteImgrevista($id)
 	{
 		header('Access-Control-Allow-Origin: *');
         header("Access-Control-Allow-Methods: GET, POST, OPTIONS, PUT, DELETE");
@@ -286,14 +269,14 @@ class Api_Documento extends CI_Controller {
 
 		if($isValidToken) {
 
-			$documento = $this->api_model_documento->get_admin_documento($id);
+			$imgrevista = $this->api_model->get_admin_imgrevista($id);
 
-			if($documento->archivo && file_exists(FCPATH.'media/pdf/documento/'.$documento->archivo))
+			if($imgrevista->image && file_exists(FCPATH.'media/images/revista/'.$imgrevista->image))
 			{
-				unlink(FCPATH.'media/pdf/documento/'.$documento->archivo);
+				unlink(FCPATH.'media/images/revista/'.$imgrevista->image);
 			}
 
-			$this->api_model_documento->deleteDocumento($id);
+			$this->api_model->deleteImgrevista($id);
 
 			$response = array(
 				'status' => 'success'
@@ -306,6 +289,7 @@ class Api_Documento extends CI_Controller {
 		}
 	}
 	//
+
 
 	
 	

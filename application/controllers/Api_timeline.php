@@ -1,40 +1,39 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
 
-class Api_Blog extends CI_Controller {
+class Api_Timeline extends CI_Controller {
 
 	public function __construct()
 	{
 		parent::__construct();
 		$this->load->model('api_model');
-		$this->load->model('api_model_blog');
+		$this->load->model('api_model_timeline');
 		$this->load->helper('url');
 		$this->load->helper('text');
 	}
 
-	public function blogs()
+	public function timelines()
 	{
 		header("Access-Control-Allow-Origin: *");
 
-		$blogs = $this->api_model_blog->get_blogs($featured=false, $recentpost=false);
+		$timelines = $this->api_model_timeline->get_timelines($featured=false, $recentpost=false);
 
 		$posts = array();
-		if(!empty($blogs)){
-			foreach($blogs as $blog){
+		if(!empty($timelines)){
+			foreach($timelines as $timeline){
 
-				$short_desc = strip_tags(character_limiter($blog->description, 70));
-				$author = $blog->first_name.' '.$blog->last_name;
+                $short_desc = strip_tags(character_limiter($timeline->description, 70));
+				$author = $timeline->first_name.' '.$timeline->last_name;
 
 				$posts[] = array(
-					'id' => $blog->id,
-					'title' => $blog->title,
-					'description' => $blog->description,
+					'id' => $timeline->id,
+                    'title' => $timeline->title,
+                    'youtube' => $timeline->youtube,
+                    'facebook' => $timeline->facebook,
 					'short_desc' => html_entity_decode($short_desc),
 					'author' => $author,
-					'is_active' => $blog->is_active,
-					'slug' => $blog->slug,
-					'image' => base_url('media/images/blog/'.$blog->image),
-					'created_at' => $blog->created_at
+					'image' => base_url('media/images/timeline/'.$timeline->image),
+					'created_at' => $timeline->created_at
 				);
 			}
 		}
@@ -44,29 +43,28 @@ class Api_Blog extends CI_Controller {
 			->set_output(json_encode($posts));
 	}
 
-	public function featured_blogs()
+	public function featured_timelines()
 	{
 		header("Access-Control-Allow-Origin: *");
 
-		$blogs = $this->api_model_blog->get_blogs($featured=true, $recentpost=false);
+		$timelines = $this->api_model_timeline->get_timelines($featured=true, $recentpost=false);
 
 		$posts = array();
-		if(!empty($blogs)){
-			foreach($blogs as $blog){
+		if(!empty($timelines)){
+			foreach($timelines as $timeline){
 				
-				$short_desc = strip_tags(character_limiter($blog->description, 70));
-				$author = $blog->first_name.' '.$blog->last_name;
-
+                $short_desc = strip_tags(character_limiter($timeline->description, 70));
+                $author = $timeline->first_name.' '.$timeline->last_name;
+                
 				$posts[] = array(
-					'id' => $blog->id,
-					'title' => $blog->title,
-					'description' => $blog->description,
+					'id' => $timeline->id,
+                    'title' => $timeline->title,
+                    'youtube' => $timeline->youtube,
+                    'facebook' => $timeline->facebook,
 					'short_desc' => html_entity_decode($short_desc),
 					'author' => $author,
-					'is_active' => $blog->is_active,
-					'slug' => $blog->slug,
-					'image' => base_url('media/images/blog/'.$blog->image),
-					'created_at' => $blog->created_at
+					'image' => base_url('media/images/timeline/'.$timeline->image),
+					'created_at' => $timeline->created_at
 				);
 			}
 		}
@@ -76,23 +74,23 @@ class Api_Blog extends CI_Controller {
 			->set_output(json_encode($posts));
 	}
 
-	public function blog($id)
+	public function timeline($id)
 	{
 		header("Access-Control-Allow-Origin: *");
 		
-		$blog = $this->api_model_blog->get_blog($id);
+		$timeline = $this->api_model_timeline->get_timeline($id);
 
-		$author = $blog->first_name.' '.$blog->last_name;
+		$author = $timeline->first_name.' '.$timeline->last_name;
 
 		$post = array(
-			'id' => $blog->id,
-			'title' => $blog->title,
-			'description' => $blog->description,
-			'author' => $author,
-			'is_active' => $blog->is_active,
-			'slug' => $blog->slug,
-			'image' => base_url('media/images/blog/'.$blog->image),
-			'created_at' => $blog->created_at
+			'id' => $timeline->id,
+                    'title' => $timeline->title,
+                    'youtube' => $timeline->youtube,
+                    'facebook' => $timeline->facebook,
+					'short_desc' => html_entity_decode($short_desc),
+					'author' => $author,
+					'image' => base_url('media/images/timeline/'.$timeline->image),
+					'created_at' => $timeline->created_at
 		);
 		
 		$this->output
@@ -100,29 +98,28 @@ class Api_Blog extends CI_Controller {
 			->set_output(json_encode($post));
 	}
 
-	public function recent_blogs()
+	public function recent_timelines()
 	{
 		header("Access-Control-Allow-Origin: *");
 
-		$blogs = $this->api_model_blog->get_blogs($featured=false, $recentpost=5);
+		$timeline = $this->api_model_timeline->get_timelines($featured=false, $recentpost=5);
 
 		$posts = array();
-		if(!empty($blogs)){
-			foreach($blogs as $blog){
+		if(!empty($timeline)){
+			foreach($timeline as $timeline){
 				
-				$short_desc = strip_tags(character_limiter($blog->description, 70));
-				$author = $blog->first_name.' '.$blog->last_name;
+				$short_desc = strip_tags(character_limiter($timeline->description, 70));
+				$author = $timeline->first_name.' '.$timeline->last_name;
 
 				$posts[] = array(
-					'id' => $blog->id,
-					'title' => $blog->title,
-					'description' => $blog->description,
+					'id' => $timeline->id,
+                    'title' => $timeline->title,
+                    'youtube' => $timeline->youtube,
+                    'facebook' => $timeline->facebook,
 					'short_desc' => html_entity_decode($short_desc),
 					'author' => $author,
-					'is_active' => $blog->is_active,
-					'slug' => $blog->slug,
-					'image' => base_url('media/images/blog/'.$blog->image),
-					'created_at' => $blog->created_at
+					'image' => base_url('media/images/timeline/'.$timeline->image),
+					'created_at' => $timeline->created_at
 				);
 			}
 		}
@@ -135,9 +132,9 @@ class Api_Blog extends CI_Controller {
 	//
 
 
-	//CRUD blog
+	//CRUD timeline
 
-	public function adminBlogs()
+	public function adminTimelines()
 	{
 		header("Access-Control-Allow-Origin: *");
 		header("Access-Control-Allow-Headers: authorization, Content-Type");
@@ -148,16 +145,17 @@ class Api_Blog extends CI_Controller {
 
 		$posts = array();
 		if($isValidToken) {
-			$blogs = $this->api_model_blog->get_admin_blogs();
-			foreach($blogs as $blog) {
+			$timelines = $this->api_model_timeline->get_admin_timelines();
+			foreach($timelines as $timeline) {
 				$posts[] = array(
-					'id' => $blog->id,
-					'title' => $blog->title,
-					'description' => $blog->description,
-					'is_active' => $blog->is_active,
-					'slug' => $blog->slug,
-					'image' => base_url('media/images/blog/'.$blog->image),
-					'created_at' => $blog->created_at
+					'id' => $timeline->id,
+                    'title' => $timeline->title,
+                    'youtube' => $timeline->youtube,
+                    'facebook' => $timeline->facebook,
+					'short_desc' => html_entity_decode($short_desc),
+					'author' => $author,
+					'image' => base_url('media/images/timeline/'.$timeline->image),
+					'created_at' => $timeline->created_at
 				);
 			}
 
@@ -168,7 +166,7 @@ class Api_Blog extends CI_Controller {
 		}
 	}
 
-	public function adminBlog($id)
+	public function adminTimeline($id)
 	{
 		header("Access-Control-Allow-Origin: *");
 		header("Access-Control-Allow-Headers: authorization, Content-Type");
@@ -179,17 +177,19 @@ class Api_Blog extends CI_Controller {
 
 		if($isValidToken) {
 
-			$blog = $this->api_model_blog->get_admin_blog($id);
+			$timeline = $this->api_model_timeline->get_admin_timeline($id);
 
 			$post = array(
-				'id' => $blog->id,
-				'title' => $blog->title,
-				'description' => $blog->description,
-				'is_active' => $blog->is_active,
-				'slug' => $blog->slug,
-				'image' => base_url('media/images/blog/'.$blog->image),
-				'is_featured' => $blog->is_featured,
-				'is_active' => $blog->is_active
+				'id' => $timeline->id,
+                    'title' => $timeline->title,
+                    'youtube' => $timeline->youtube,
+                    'facebook' => $timeline->facebook,
+					'short_desc' => html_entity_decode($short_desc),
+					'author' => $author,
+					'image' => base_url('media/images/timeline/'.$timeline->image),
+					'created_at' => $timeline->created_at,
+				'is_featured' => $timeline->is_featured,
+				'is_active' => $timeline->is_active
 			);
 			
 
@@ -200,7 +200,7 @@ class Api_Blog extends CI_Controller {
 		}
 	}
 
-	public function createBlog()
+	public function createTimeline()
 	{
 		header("Access-Control-Allow-Origin: *");
 		header("Access-Control-Request-Headers: GET,POST,OPTIONS,DELETE,PUT");
@@ -213,9 +213,10 @@ class Api_Blog extends CI_Controller {
 		if($isValidToken) {
 
 			$title = $this->input->post('title');
+			$youtube = $this->input->post('youtube');
+			$facebook = $this->input->post('facebook');
 			$description = $this->input->post('description');
 			$is_featured = $this->input->post('is_featured');
-			$slug = $this->input->post('slug');
 			$is_active = $this->input->post('is_active');
 
 			$filename = NULL;
@@ -224,7 +225,7 @@ class Api_Blog extends CI_Controller {
 
 			if ($_FILES && $_FILES['image']['name']) {
 
-				$config['upload_path']          = './media/images/blog/';
+				$config['upload_path']          = './media/images/timeline/';
 	            $config['allowed_types']        = 'gif|jpg|png|jpeg';
 	            $config['max_size']             = 500;
 
@@ -245,18 +246,19 @@ class Api_Blog extends CI_Controller {
 			}
 
 			if( ! $isUploadError) {
-	        	$blogData = array(
+	        	$timelineData = array(
 					'title' => $title,
+					'youtube' => $youtube,
+					'facebook' => $facebook,
 					'user_id' => 1,
 					'description' => $description,
 					'image' => $filename,
 					'is_featured' => $is_featured,
 					'is_active' => $is_active,
-					'slug' => $slug,
 					'created_at' => date('Y-m-d H:i:s', time())
 				);
 
-				$id = $this->api_model_blog->insertBlog($blogData);
+				$id = $this->api_model_timeline->insertTimeline($timelineData);
 
 				$response = array(
 					'status' => 'success'
@@ -270,7 +272,7 @@ class Api_Blog extends CI_Controller {
 		}
 	}
 
-	public function updateBlog($id)
+	public function updateTimeline($id)
 	{
 		header("Access-Control-Allow-Origin: *");
 		header("Access-Control-Allow-Headers: authorization, Content-Type");
@@ -282,20 +284,21 @@ class Api_Blog extends CI_Controller {
 
 		if($isValidToken) {
 
-			$blog = $this->api_model_blog->get_admin_blog($id);
-			$filename = $blog->image;
+			$timeline = $this->api_model_timeline->get_admin_timeline($id);
+			$filename = $timeline->image;
 
 			$title = $this->input->post('title');
+			$youtube = $this->input->post('youtube');
+			$facebook = $this->input->post('facebook');
 			$description = $this->input->post('description');
 			$is_featured = $this->input->post('is_featured');
-			$slug = $this->input->post('slug');
 			$is_active = $this->input->post('is_active');
 
 			$isUploadError = FALSE;
 
 			if ($_FILES && $_FILES['image']['name']) {
 
-				$config['upload_path']          = './media/images/blog/';
+				$config['upload_path']          = './media/images/timeline/';
 	            $config['allowed_types']        = 'gif|jpg|png|jpeg';
 	            $config['max_size']             = 500;
 
@@ -311,9 +314,9 @@ class Api_Blog extends CI_Controller {
 	            }
 	            else {
 	   
-					if($blog->image && file_exists(FCPATH.'media/images/blog/'.$blog->image))
+					if($timeline->image && file_exists(FCPATH.'media/images/timeline/'.$timeline->image))
 					{
-						unlink(FCPATH.'media/images/blog/'.$blog->image);
+						unlink(FCPATH.'media/images/timeline/'.$timeline->image);
 					}
 
 	            	$uploadData = $this->upload->data();
@@ -322,17 +325,16 @@ class Api_Blog extends CI_Controller {
 			}
 
 			if( ! $isUploadError) {
-	        	$blogData = array(
+	        	$timelineData = array(
 					'title' => $title,
 					'user_id' => 1,
 					'description' => $description,
 					'image' => $filename,
 					'is_featured' => $is_featured,
-					'slug' => $slug,
 					'is_active' => $is_active
 				);
 
-				$this->api_model_blog->updateBlog($id, $blogData);
+				$this->api_model_timeline->updateTimeline($id, $timelineData);
 
 				$response = array(
 					'status' => 'success'
@@ -346,7 +348,7 @@ class Api_Blog extends CI_Controller {
 		}
 	}
 
-	public function deleteBlog($id)
+	public function deleteTimeline($id)
 	{
 		header('Access-Control-Allow-Origin: *');
         header("Access-Control-Allow-Methods: GET, POST, OPTIONS, PUT, DELETE");
@@ -358,14 +360,14 @@ class Api_Blog extends CI_Controller {
 
 		if($isValidToken) {
 
-			$blog = $this->api_model_blog->get_admin_blog($id);
+			$timeline = $this->api_model_timeline->get_admin_timeline($id);
 
-			if($blog->image && file_exists(FCPATH.'media/images/blog/'.$blog->image))
+			if($timeline->image && file_exists(FCPATH.'media/images/timeline/'.$timeline->image))
 			{
-				unlink(FCPATH.'media/images/blog/'.$blog->image);
+				unlink(FCPATH.'media/images/timeline/'.$timeline->image);
 			}
 
-			$this->api_model_blog->deleteBlog($id);
+			$this->api_model_timeline->deleteTimeline($id);
 
 			$response = array(
 				'status' => 'success'

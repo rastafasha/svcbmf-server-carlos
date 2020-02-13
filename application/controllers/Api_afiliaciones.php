@@ -7,6 +7,7 @@ class Api_Afiliaciones extends CI_Controller {
 	{
 		parent::__construct();
 		$this->load->model('api_model');
+		$this->load->model('api_model_afiliaciones');
 		$this->load->helper('url');
 		$this->load->helper('text');
 	}
@@ -15,7 +16,7 @@ class Api_Afiliaciones extends CI_Controller {
 	{
 		header("Access-Control-Allow-Origin: *");
 
-		$afiliaciones = $this->api_model->get_afiliaciones($featured=false, $recentpost=false);
+		$afiliaciones = $this->api_model_afiliaciones->get_afiliaciones($featured=false, $recentpost=false);
 
 		$posts = array();
 		if(!empty($afiliaciones)){
@@ -49,7 +50,7 @@ class Api_Afiliaciones extends CI_Controller {
 	{
 		header("Access-Control-Allow-Origin: *");
 		
-		$afiliacione = $this->api_model->get_afiliacione($id);
+		$afiliacione = $this->api_model_afiliaciones->get_afiliacione($id);
 
 		$post = array(
 			'id' => $afiliacione->id,
@@ -75,7 +76,7 @@ class Api_Afiliaciones extends CI_Controller {
 	{
 		header("Access-Control-Allow-Origin: *");
 
-		$afiliaciones = $this->api_model->get_afiliaciones($featured=false, $recentpost=5);
+		$afiliaciones = $this->api_model_afiliaciones->get_afiliaciones($featured=false, $recentpost=5);
 
 		$posts = array();
 		if(!empty($afiliaciones)){
@@ -121,7 +122,7 @@ class Api_Afiliaciones extends CI_Controller {
 
 		$posts = array();
 		if($isValidToken) {
-			$afiliaciones = $this->api_model->get_admin_afiliaciones();
+			$afiliaciones = $this->api_model_afiliaciones->get_admin_afiliaciones();
 			foreach($afiliaciones as $afiliacione) {
 				$posts[] = array(
 					'id' => $afiliacione->id,
@@ -157,7 +158,7 @@ class Api_Afiliaciones extends CI_Controller {
 
 		if($isValidToken) {
 
-			$afiliacione = $this->api_model->get_admin_afiliacione($id);
+			$afiliacione = $this->api_model_afiliaciones->get_admin_afiliacione($id);
 
 			$post = array(
 				'id' => $afiliacione->id,
@@ -245,7 +246,7 @@ class Api_Afiliaciones extends CI_Controller {
 					'created_at' => date('Y-m-d H:i:s', time())
 				);
 
-				$id = $this->api_model->insertAfiliacione($afiliacioneData);
+				$id = $this->api_model_afiliaciones->insertAfiliacione($afiliacioneData);
 
 				$response = array(
 					'status' => 'success'
@@ -271,7 +272,7 @@ class Api_Afiliaciones extends CI_Controller {
 
 		if($isValidToken) {
 
-			$afiliacione = $this->api_model->get_admin_afiliacione($id);
+			$afiliacione = $this->api_model_afiliaciones->get_admin_afiliacione($id);
 			$filename = $afiliacione->archivo;
 
 			$nombres = $this->input->post('nombres');
@@ -328,7 +329,7 @@ class Api_Afiliaciones extends CI_Controller {
 					'email' => $email,
 				);
 
-				$this->api_model->updateAfiliacione($id, $afiliacioneData);
+				$this->api_model_afiliaciones->updateAfiliacione($id, $afiliacioneData);
 
 				$response = array(
 					'status' => 'success'
@@ -354,7 +355,7 @@ class Api_Afiliaciones extends CI_Controller {
 
 		if($isValidToken) {
 
-			$afiliacione = $this->api_model->get_admin_afiliacione($id);
+			$afiliacione = $this->api_model_afiliaciones->get_admin_afiliacione($id);
 
 			if($afiliacione->archivo && file_exists(FCPATH.'media/pdf/afiliaciones/'.$afiliacione->archivo))
 			{

@@ -1,38 +1,37 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
 
-class Api_User extends CI_Controller {
+class Api_Miembro extends CI_Controller {
 
 	public function __construct()
 	{
 		parent::__construct();
 		$this->load->model('api_model');
-		$this->load->model('api_model_user');
 		$this->load->helper('url');
 		$this->load->helper('text');
     }
     
-	public function users()
+	public function miembros()
 	{
 		header("Access-Control-Allow-Origin: *");
 
-		$users = $this->api_model_user->get_users($featured=false, $recentpost=false);
+		$miembros = $this->api_model->get_miembros($featured=false, $recentpost=false);
 
 		$posts = array();
-		if(!empty($users)){
-			foreach($users as $user){
+		if(!empty($miembros)){
+			foreach($miembros as $miembro){
 
 				$posts[] = array(
-					'id' => $user->id,
-					'username' => $user->username,
-					'password' => $user->password,
-					'first_name' => $user->first_name,
-					'last_name' => $user->last_name,
-					'role' => $user->role,
-					'is_active' => $user->is_active,
-					'token' => $user->token,
-					'image' => base_url('media/images/users/'.$user->image),
-					'created_at' => $user->created_at
+					'id' => $miembro->id,
+					'username' => $miembro->username,
+					'password' => $miembro->password,
+					'first_name' => $miembro->first_name,
+					'last_name' => $miembro->last_name,
+					'role' => $miembro->role,
+					'is_active' => $miembro->is_active,
+					'token' => $miembro->token,
+					'image' => base_url('media/images/miembros/'.$miembro->image),
+					'created_at' => $miembro->created_at
 				);
 			}
 		}
@@ -42,28 +41,28 @@ class Api_User extends CI_Controller {
 			->set_output(json_encode($posts));
 	}
 
-	public function featured_users()
+	public function featured_miembros()
 	{
 		header("Access-Control-Allow-Origin: *");
 
-		$users = $this->api_model_user->get_users($featured=true, $recentpost=false);
+		$miembros = $this->api_model->get_miembros($featured=true, $recentpost=false);
 
 		$posts = array();
-		if(!empty($users)){
-			foreach($users as $user){
+		if(!empty($miembros)){
+			foreach($miembros as $miembro){
 				
 
 				$posts[] = array(
-					'id' => $user->id,
-					'username' => $user->username,
-					'password' => $user->password,
-					'first_name' => $user->first_name,
-					'last_name' => $user->last_name,
-					'role' => $user->role,
-					'is_active' => $user->is_active,
-					'token' => $user->token,
-					'image' => base_url('media/images/users/'.$user->image),
-					'created_at' => $user->created_at
+					'id' => $miembro->id,
+					'username' => $miembro->username,
+					'password' => $miembro->password,
+					'first_name' => $miembro->first_name,
+					'last_name' => $miembro->last_name,
+					'role' => $miembro->role,
+					'is_active' => $miembro->is_active,
+					'token' => $miembro->token,
+					'image' => base_url('media/images/miembros/'.$miembro->image),
+					'created_at' => $miembro->created_at
 				);
 			}
 		}
@@ -73,23 +72,23 @@ class Api_User extends CI_Controller {
 			->set_output(json_encode($posts));
 	}
 
-	public function user($id)
+	public function miembro($id)
 	{
 		header("Access-Control-Allow-Origin: *");
 		
-		$user = $this->api_model_user->get_user($id);
+		$miembro = $this->api_model->get_miembro($id);
 
 		$post = array(
-			'id' => $user->id,
-			'username' => $user->username,
-			'password' => $user->password,
-			'first_name' => $user->first_name,
-			'last_name' => $user->last_name,
-			'role' => $user->role,
-			'is_active' => $user->is_active,
-			'token' => $user->token,
-			'image' => base_url('media/images/users/'.$user->image),
-			'created_at' => $user->created_at
+			'id' => $miembro->id,
+					'username' => $miembro->username,
+					'password' => $miembro->password,
+					'first_name' => $miembro->first_name,
+					'last_name' => $miembro->last_name,
+					'role' => $miembro->role,
+					'is_active' => $miembro->is_active,
+					'token' => $miembro->token,
+					'image' => base_url('media/images/miembros/'.$miembro->image),
+					'created_at' => $miembro->created_at
 		);
 		
 		$this->output
@@ -97,28 +96,28 @@ class Api_User extends CI_Controller {
 			->set_output(json_encode($post));
 	}
 
-	public function recent_users()
+	public function recent_miembros()
 	{
 		header("Access-Control-Allow-Origin: *");
 
-		$users = $this->api_model_user->get_users($featured=false, $recentpost=5);
+		$miembros = $this->api_model->get_miembros($featured=false, $recentpost=5);
 
 		$posts = array();
-		if(!empty($users)){
-			foreach($users as $user){
+		if(!empty($miembros)){
+			foreach($miembros as $miembro){
 				
 
 				$posts[] = array(
-					'id' => $user->id,
-					'username' => $user->username,
-					'password' => $user->password,
-					'first_name' => $user->first_name,
-					'last_name' => $user->last_name,
-					'role' => $user->role,
-					'is_active' => $user->is_active,
-					'token' => $user->token,
-					'image' => base_url('media/images/users/'.$user->image),
-					'created_at' => $user->created_at
+					'id' => $miembro->id,
+					'username' => $miembro->username,
+					'password' => $miembro->password,
+					'first_name' => $miembro->first_name,
+					'last_name' => $miembro->last_name,
+					'role' => $miembro->role,
+					'is_active' => $miembro->is_active,
+					'token' => $miembro->token,
+					'image' => base_url('media/images/miembros/'.$miembro->image),
+					'created_at' => $miembro->created_at
 				);
 			}
 		}
@@ -133,30 +132,30 @@ class Api_User extends CI_Controller {
 
 	//CRUD users
 
-	public function adminUsers()
+	public function adminMiembros()
 	{
 		header("Access-Control-Allow-Origin: *");
 		header("Access-Control-Allow-Headers: authorization, Content-Type");
 
 		$token = $this->input->get_request_header('Authorization');
 
-		$isValidToken = $this->api_model->checkToken($token);
+		$isValidToken = $this->api_model->checkTokenMiembro($token);
 
 		$posts = array();
 		if($isValidToken) {
-			$users = $this->api_model_user->get_admin_users();
-			foreach($users as $user) {
+			$miembros = $this->api_model->get_admin_miembros();
+			foreach($miembros as $miembro) {
 				$posts[] = array(
-					'id' => $user->id,
-					'username' => $user->username,
-					'password' => $user->password,
-					'first_name' => $user->first_name,
-					'last_name' => $user->last_name,
-					'role' => $user->role,
-					'is_active' => $user->is_active,
-					'token' => $user->token,
-					'image' => base_url('media/images/users/'.$user->image),
-					'created_at' => $user->created_at
+					'id' => $miembro->id,
+					'username' => $miembro->username,
+					'password' => $miembro->password,
+					'first_name' => $miembro->first_name,
+					'last_name' => $miembro->last_name,
+					'role' => $miembro->role,
+					'is_active' => $miembro->is_active,
+					'token' => $miembro->token,
+					'image' => base_url('media/images/miembros/'.$miembro->image),
+					'created_at' => $miembro->created_at
 				);
 			}
 
@@ -167,30 +166,30 @@ class Api_User extends CI_Controller {
 		}
 	}
 
-	public function adminUser($id)
+	public function adminMiembro($id)
 	{
 		header("Access-Control-Allow-Origin: *");
 		header("Access-Control-Allow-Headers: authorization, Content-Type");
 
 		$token = $this->input->get_request_header('Authorization');
 
-		$isValidToken = $this->api_model->checkToken($token);
+		$isValidToken = $this->api_model->checkTokenMiembro($token);
 
 		if($isValidToken) {
 
-			$user = $this->api_model_user->get_admin_user($id);
+			$miembro = $this->api_model->get_admin_miembro($id);
 
 			$post = array(
-				'id' => $user->id,
-					'username' => $user->username,
-					'password' => $user->password,
-					'first_name' => $user->first_name,
-					'last_name' => $user->last_name,
-					'role' => $user->role,
-					'is_active' => $user->is_active,
-					'token' => $user->token,
-					'image' => base_url('media/images/users/'.$user->image),
-					'created_at' => $user->created_at,
+				'id' => $miembro->id,
+					'username' => $miembro->username,
+					'password' => $miembro->password,
+					'first_name' => $miembro->first_name,
+					'last_name' => $miembro->last_name,
+					'role' => $miembro->role,
+					'is_active' => $miembro->is_active,
+					'token' => $miembro->token,
+					'image' => base_url('media/images/miembros/'.$miembro->image),
+					'created_at' => $miembro->created_at,
 				'is_active' => $user->is_active
 			);
 			
@@ -202,7 +201,7 @@ class Api_User extends CI_Controller {
 		}
 	}
 
-	public function createUser()
+	public function createMiembro()
 	{
 		header("Access-Control-Allow-Origin: *");
 		header("Access-Control-Request-Headers: GET,POST,OPTIONS,DELETE,PUT");
@@ -210,7 +209,7 @@ class Api_User extends CI_Controller {
 
 		$token = $this->input->get_request_header('Authorization');
 
-		$isValidToken = $this->api_model->checkToken($token);
+		$isValidToken = $this->api_model->checkTokenMiembro($token);
 
 		if($isValidToken) {
 
@@ -227,7 +226,7 @@ class Api_User extends CI_Controller {
 
 			if ($_FILES && $_FILES['image']['name']) {
 
-				$config['upload_path']          = './media/images/users/';
+				$config['upload_path']          = './media/images/miembros/';
 	            $config['allowed_types']        = 'gif|jpg|png|jpeg';
 	            $config['max_size']             = 500;
 
@@ -248,7 +247,7 @@ class Api_User extends CI_Controller {
 			}
 
 			if( ! $isUploadError) {
-	        	$userData = array(
+	        	$miembroData = array(
 					'username' => $username,
 					'password' => $password,
 					'first_name' => $first_name,
@@ -259,7 +258,7 @@ class Api_User extends CI_Controller {
 					'created_at' => date('Y-m-d H:i:s', time())
 				);
 
-				$id = $this->api_model_user->insertUser($userData);
+				$id = $this->api_model->insertMiembro($miembroData);
 
 				$response = array(
 					'status' => 'success'
@@ -273,7 +272,7 @@ class Api_User extends CI_Controller {
 		}
 	}
 
-	public function updateUser($id)
+	public function updateMiembro($id)
 	{
 		header("Access-Control-Allow-Origin: *");
 		header("Access-Control-Allow-Headers: authorization, Content-Type");
@@ -281,12 +280,12 @@ class Api_User extends CI_Controller {
 
 		$token = $this->input->get_request_header('Authorization');
 
-		$isValidToken = $this->api_model->checkToken($token);
+		$isValidToken = $this->api_model->checkTokenMiembro($token);
 
 		if($isValidToken) {
 
-			$user = $this->api_model_user->get_admin_user($id);
-			$filename = $user->image;
+			$miembro = $this->api_model->get_admin_miembro($id);
+			$filename = $miembro->image;
 
 			$username = $this->input->post('username');
 			$password = $this->input->post('password');
@@ -299,7 +298,7 @@ class Api_User extends CI_Controller {
 
 			if ($_FILES && $_FILES['image']['name']) {
 
-				$config['upload_path']          = './media/images/users/';
+				$config['upload_path']          = './media/images/miembros/';
 	            $config['allowed_types']        = 'gif|jpg|png|jpeg';
 	            $config['max_size']             = 500;
 
@@ -315,9 +314,9 @@ class Api_User extends CI_Controller {
 	            }
 	            else {
 	   
-					if($user->image && file_exists(FCPATH.'media/images/users/'.$user->image))
+					if($miembro->image && file_exists(FCPATH.'media/images/miembros/'.$miembro->image))
 					{
-						unlink(FCPATH.'media/images/users/'.$user->image);
+						unlink(FCPATH.'media/images/miembros/'.$miembro->image);
 					}
 
 	            	$uploadData = $this->upload->data();
@@ -326,7 +325,7 @@ class Api_User extends CI_Controller {
 			}
 
 			if( ! $isUploadError) {
-	        	$userData = array(
+	        	$miembroData = array(
 					'username' => $username,
 					'password' => $password,
 					'first_name' => $first_name,
@@ -336,7 +335,7 @@ class Api_User extends CI_Controller {
 					'is_active' => $is_active
 				);
 
-				$this->api_model_user->updateUser($id, $userData);
+				$this->api_model->updateMiembro($id, $miembroData);
 
 				$response = array(
 					'status' => 'success'
@@ -350,7 +349,7 @@ class Api_User extends CI_Controller {
 		}
 	}
 
-	public function deleteUser($id)
+	public function deleteMiembro($id)
 	{
 		header('Access-Control-Allow-Origin: *');
         header("Access-Control-Allow-Methods: GET, POST, OPTIONS, PUT, DELETE");
@@ -358,18 +357,18 @@ class Api_User extends CI_Controller {
 
 		$token = $this->input->get_request_header('Authorization');
 
-		$isValidToken = $this->api_model->checkToken($token);
+		$isValidToken = $this->api_model->checkTokenMiembro($token);
 
 		if($isValidToken) {
 
-			$user = $this->api_model_user->get_admin_user($id);
+			$miembro = $this->api_model->get_admin_miembro($id);
 
-			if($user->image && file_exists(FCPATH.'media/images/users/'.$user->image))
+			if($miembro->image && file_exists(FCPATH.'media/images/miembros/'.$miembro->image))
 			{
-				unlink(FCPATH.'media/images/users/'.$user->image);
+				unlink(FCPATH.'media/images/miembro/'.$miembro->image);
 			}
 
-			$this->api_model_user->deleteUser($id);
+			$this->api_model->deleteMiembro($id);
 
 			$response = array(
 				'status' => 'success'

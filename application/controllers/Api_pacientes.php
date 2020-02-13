@@ -1,38 +1,37 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
 
-class Api_Bancuadrado extends CI_Controller {
+class Api_Pacientes extends CI_Controller {
 
 	public function __construct()
 	{
 		parent::__construct();
+		$this->load->model('api_model_paciente');
 		$this->load->model('api_model');
-		$this->load->model('api_model_bancuadrado');
 		$this->load->helper('url');
 		$this->load->helper('text');
 	}
 
-
-    // Ads cuadrado
-	public function bancuadrados()
+	public function pacientes()
 	{
 		header("Access-Control-Allow-Origin: *");
 
-		$bancuadrados = $this->api_model_bancuadrado->get_bancuadrados($featured=false, $recentpost=false);
+		$pacientes = $this->api_model_paciente->get_pacientes($featured=false, $recentpost=false);
 
 		$posts = array();
-		if(!empty($bancuadrados)){
-			foreach($bancuadrados as $bancuadrado){
+		if(!empty($pacientes)){
+			foreach($pacientes as $paciente){
 
+				$short_desc = strip_tags(character_limiter($paciente->description, 70));
 
 				$posts[] = array(
-					'id' => $bancuadrado->id,
-					'titulo' => $bancuadrado->titulo,
-					'target' => $bancuadrado->target,
-					'enlace' => $bancuadrado->enlace,
-					'is_active' => $bancuadrado->is_active,
-					'image' => base_url('media/images/ads/cuadrado/'.$bancuadrado->image),
-					'created_at' => $bancuadrado->created_at
+					'id' => $paciente->id,
+					'title' => $paciente->title,
+					'description' => $paciente->description,
+					'is_active' => $paciente->is_active,
+					'short_desc' => html_entity_decode($short_desc),
+					'image' => base_url('media/images/paciente/'.$paciente->image),
+					'created_at' => $paciente->created_at
 				);
 			}
 		}
@@ -42,25 +41,26 @@ class Api_Bancuadrado extends CI_Controller {
 			->set_output(json_encode($posts));
 	}
 
-	public function featured_bancuadrados()
+	public function featured_pacientes()
 	{
 		header("Access-Control-Allow-Origin: *");
 
-		$bancuadrados = $this->api_model_bancuadrado->get_bancuadrados($featured=true, $recentpost=false);
+		$pacientes = $this->api_model_paciente->get_pacientes($featured=true, $recentpost=false);
 
 		$posts = array();
-		if(!empty($bancuadrados)){
-			foreach($bancuadrados as $bancuadrado){
+		if(!empty($pacientes)){
+			foreach($pacientes as $paciente){
 				
+				$short_desc = strip_tags(character_limiter($paciente->description, 70));
 
 				$posts[] = array(
-					'id' => $bancuadrado->id,
-					'titulo' => $bancuadrado->titulo,
-					'target' => $bancuadrado->target,
-					'enlace' => $bancuadrado->enlace,
-					'is_active' => $bancuadrado->is_active,
-					'image' => base_url('media/images/ads/cuadrado/'.$bancuadrado->image),
-					'created_at' => $bancuadrado->created_at
+					'id' => $paciente->id,
+					'title' => $paciente->title,
+					'description' => $paciente->description,
+					'is_active' => $paciente->is_active,
+					'short_desc' => html_entity_decode($short_desc),
+					'image' => base_url('media/images/paciente/'.$paciente->image),
+					'created_at' => $paciente->created_at
 				);
 			}
 		}
@@ -70,21 +70,20 @@ class Api_Bancuadrado extends CI_Controller {
 			->set_output(json_encode($posts));
 	}
 
-	public function bancuadrado($id)
+	public function paciente($id)
 	{
 		header("Access-Control-Allow-Origin: *");
 		
-		$bancuadrado = $this->api_model_bancuadrado->get_bancuadrado($id);
-
+		$paciente = $this->api_model_paciente->get_paciente($id);
 
 		$post = array(
-			'id' => $bancuadrado->id,
-			'titulo' => $bancuadrado->titulo,
-			'target' => $bancuadrado->target,
-			'enlace' => $bancuadrado->enlace,
-			'is_active' => $bancuadrado->is_active,
-			'image' => base_url('media/images/ads/cuadrado/'.$bancuadrado->image),
-			'created_at' => $bancuadrado->created_at
+			'id' => $paciente->id,
+			'title' => $paciente->title,
+			'description' => $paciente->description,
+			'is_active' => $paciente->is_active,
+			'description' => $paciente->description,
+			'image' => base_url('media/images/paciente/'.$paciente->image),
+			'created_at' => $paciente->created_at
 		);
 		
 		$this->output
@@ -92,25 +91,26 @@ class Api_Bancuadrado extends CI_Controller {
 			->set_output(json_encode($post));
 	}
 
-	public function recent_bancuadrados()
+	public function recent_pacientes()
 	{
 		header("Access-Control-Allow-Origin: *");
 
-		$bancuadrados = $this->api_model_bancuadrado->get_bancuadrados($featured=false, $recentpost=5);
+		$pacientes = $this->api_model_paciente->get_pacientes($featured=false, $recentpost=5);
 
 		$posts = array();
-		if(!empty($bancuadrados)){
-			foreach($bancuadrados as $bancuadrado){
+		if(!empty($pacientes)){
+			foreach($pacientes as $paciente){
 				
+				$short_desc = strip_tags(character_limiter($paciente->description, 70));
 
 				$posts[] = array(
-					'id' => $bancuadrado->id,
-					'titulo' => $bancuadrado->titulo,
-					'target' => $bancuadrado->target,
-					'enlace' => $bancuadrado->enlace,
-					'is_active' => $bancuadrado->is_active,
-					'image' => base_url('media/images/ads/cuadrado/'.$bancuadrado->image),
-					'created_at' => $bancuadrado->created_at
+					'id' => $paciente->id,
+					'title' => $paciente->title,
+					'description' => $paciente->description,
+					'is_active' => $paciente->is_active,
+					'short_desc' => html_entity_decode($short_desc),
+					'image' => base_url('media/images/paciente/'.$paciente->image),
+					'created_at' => $paciente->created_at
 				);
 			}
 		}
@@ -123,9 +123,9 @@ class Api_Bancuadrado extends CI_Controller {
 	//
 
 
-	//CRUD bancuadrado
+	//CRUD paciente
 
-	public function adminBancuadrados()
+	public function adminPacientes()
 	{
 		header("Access-Control-Allow-Origin: *");
 		header("Access-Control-Allow-Headers: authorization, Content-Type");
@@ -136,16 +136,14 @@ class Api_Bancuadrado extends CI_Controller {
 
 		$posts = array();
 		if($isValidToken) {
-			$bancuadrados = $this->api_model_bancuadrado->get_admin_bancuadrados();
-			foreach($bancuadrados as $bancuadrado) {
+			$pacientes = $this->api_model_paciente->get_admin_pacientes();
+			foreach($pacientes as $paciente) {
 				$posts[] = array(
-					'id' => $bancuadrado->id,
-					'titulo' => $bancuadrado->titulo,
-					'target' => $bancuadrado->target,
-					'enlace' => $bancuadrado->enlace,
-					'is_active' => $bancuadrado->is_active,
-					'image' => base_url('media/images/ads/cuadrado/'.$bancuadrado->image),
-					'created_at' => $bancuadrado->created_at
+					'id' => $paciente->id,
+					'title' => $paciente->title,
+					'description' => $paciente->description,
+					'image' => base_url('media/images/paciente/'.$paciente->image),
+					'created_at' => $paciente->created_at
 				);
 			}
 
@@ -156,7 +154,7 @@ class Api_Bancuadrado extends CI_Controller {
 		}
 	}
 
-	public function adminBancuadrado($id)
+	public function adminPaciente($id)
 	{
 		header("Access-Control-Allow-Origin: *");
 		header("Access-Control-Allow-Headers: authorization, Content-Type");
@@ -167,17 +165,15 @@ class Api_Bancuadrado extends CI_Controller {
 
 		if($isValidToken) {
 
-			$bancuadrado = $this->api_model_bancuadrado->get_admin_bancuadrado($id);
+			$paciente = $this->api_model_paciente->get_admin_paciente($id);
 
 			$post = array(
-				'id' => $bancuadrado->id,
-				'titulo' => $bancuadrado->titulo,
-				'target' => $bancuadrado->target,
-				'enlace' => $bancuadrado->enlace,
-				'is_active' => $bancuadrado->is_active,
-				'image' => base_url('media/images/ads/cuadrado/'.$bancuadrado->image),
-				'created_at' => $bancuadrado->created_at,
-				'is_active' => $bancuadrado->is_active
+				'id' => $paciente->id,
+				'title' => $paciente->title,
+				'description' => $paciente->description,
+				'image' => base_url('media/images/paciente/'.$paciente->image),
+				'is_featured' => $paciente->is_featured,
+				'is_active' => $paciente->is_active
 			);
 			
 
@@ -188,7 +184,7 @@ class Api_Bancuadrado extends CI_Controller {
 		}
 	}
 
-	public function createBancuadrado()
+	public function createPaciente()
 	{
 		header("Access-Control-Allow-Origin: *");
 		header("Access-Control-Request-Headers: GET,POST,OPTIONS,DELETE,PUT");
@@ -200,9 +196,9 @@ class Api_Bancuadrado extends CI_Controller {
 
 		if($isValidToken) {
 
-			$titulo = $this->input->post('titulo');
-			$target = $this->input->post('target');
-			$enlace = $this->input->post('enlace');
+			$title = $this->input->post('title');
+			$description = $this->input->post('description');
+			$is_featured = $this->input->post('is_featured');
 			$is_active = $this->input->post('is_active');
 
 			$filename = NULL;
@@ -211,7 +207,7 @@ class Api_Bancuadrado extends CI_Controller {
 
 			if ($_FILES && $_FILES['image']['name']) {
 
-				$config['upload_path']          = './media/images/ads/cuadrado/';
+				$config['upload_path']          = './media/images/paciente/';
 	            $config['allowed_types']        = 'gif|jpg|png|jpeg';
 	            $config['max_size']             = 500;
 
@@ -232,16 +228,17 @@ class Api_Bancuadrado extends CI_Controller {
 			}
 
 			if( ! $isUploadError) {
-	        	$bancuadradoData = array(
-					'titulo' => $titulo,
-					'target' => $target,
-					'enlace' => $enlace,
+	        	$pacienteData = array(
+					'title' => $title,
+					'user_id' => 1,
+					'description' => $description,
 					'image' => $filename,
+					'is_featured' => $is_featured,
 					'is_active' => $is_active,
 					'created_at' => date('Y-m-d H:i:s', time())
 				);
 
-				$id = $this->api_model_bancuadrado->insertBancuadrado($bancuadradoData);
+				$id = $this->api_model_paciente->insertPaciente($pacienteData);
 
 				$response = array(
 					'status' => 'success'
@@ -255,7 +252,7 @@ class Api_Bancuadrado extends CI_Controller {
 		}
 	}
 
-	public function updateBancuadrado($id)
+	public function updatePaciente($id)
 	{
 		header("Access-Control-Allow-Origin: *");
 		header("Access-Control-Allow-Headers: authorization, Content-Type");
@@ -267,20 +264,19 @@ class Api_Bancuadrado extends CI_Controller {
 
 		if($isValidToken) {
 
-			$bancuadrado = $this->api_model_bancuadrado->get_admin_bancuadrado($id);
-			$filename = $bancuadrado->image;
+			$paciente = $this->api_model_paciente->get_admin_paciente($id);
+			$filename = $paciente->image;
 
-
-			$titulo = $this->input->post('titulo');
-			$target = $this->input->post('target');
-			$enlace = $this->input->post('enlace');
+			$title = $this->input->post('title');
+			$description = $this->input->post('description');
+			$is_featured = $this->input->post('is_featured');
 			$is_active = $this->input->post('is_active');
 
 			$isUploadError = FALSE;
 
 			if ($_FILES && $_FILES['image']['name']) {
 
-				$config['upload_path']          = './media/images/ads/cuadrado/';
+				$config['upload_path']          = './media/images/paciente/';
 	            $config['allowed_types']        = 'gif|jpg|png|jpeg';
 	            $config['max_size']             = 500;
 
@@ -296,9 +292,9 @@ class Api_Bancuadrado extends CI_Controller {
 	            }
 	            else {
 	   
-					if($bancuadrado->image && file_exists(FCPATH.'media/images/ads/cuadrado/'.$bancuadrado->image))
+					if($paciente->image && file_exists(FCPATH.'media/images/paciente/'.$paciente->image))
 					{
-						unlink(FCPATH.'media/images/ads/cuadrado/'.$bancuadrado->image);
+						unlink(FCPATH.'media/images/paciente/'.$paciente->image);
 					}
 
 	            	$uploadData = $this->upload->data();
@@ -307,16 +303,16 @@ class Api_Bancuadrado extends CI_Controller {
 			}
 
 			if( ! $isUploadError) {
-	        	$bancuadradoData = array(
-					
-					'titulo' => $titulo,
-					'target' => $target,
-					'enlace' => $enlace,
+	        	$pacienteData = array(
+					'title' => $title,
+					'user_id' => 1,
+					'description' => $description,
 					'image' => $filename,
+					'is_featured' => $is_featured,
 					'is_active' => $is_active
 				);
 
-				$this->api_model_bancuadrado->updateBancuadrado($id, $bancuadradoData);
+				$this->api_model_paciente->updatePaciente($id, $pacienteData);
 
 				$response = array(
 					'status' => 'success'
@@ -330,7 +326,7 @@ class Api_Bancuadrado extends CI_Controller {
 		}
 	}
 
-	public function deleteBancuadrado($id)
+	public function deletePaciente($id)
 	{
 		header('Access-Control-Allow-Origin: *');
         header("Access-Control-Allow-Methods: GET, POST, OPTIONS, PUT, DELETE");
@@ -342,14 +338,14 @@ class Api_Bancuadrado extends CI_Controller {
 
 		if($isValidToken) {
 
-			$bancuadrado = $this->api_model_bancuadrado->get_admin_bancuadrado($id);
+			$paciente = $this->api_model_paciente->get_admin_paciente($id);
 
-			if($bancuadrado->image && file_exists(FCPATH.'media/images/ads/cuadrado/'.$bancuadrado->image))
+			if($paciente->image && file_exists(FCPATH.'media/images/paciente/'.$paciente->image))
 			{
-				unlink(FCPATH.'media/images/ads/cuadrado/'.$bancuadrado->image);
+				unlink(FCPATH.'media/images/paciente/'.$paciente->image);
 			}
 
-			$this->api_model->deleteBancuadrado($id);
+			$this->api_model_paciente->deletePaciente($id);
 
 			$response = array(
 				'status' => 'success'

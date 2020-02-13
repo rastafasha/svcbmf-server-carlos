@@ -7,6 +7,7 @@ class Api_Galeria extends CI_Controller {
 	{
 		parent::__construct();
 		$this->load->model('api_model');
+		$this->load->model('api_model_galeria');
 		$this->load->helper('url');
 		$this->load->helper('text');
 	}
@@ -16,7 +17,7 @@ class Api_Galeria extends CI_Controller {
 	{
 		header("Access-Control-Allow-Origin: *");
 
-		$galerias = $this->api_model->get_galerias($featured=false, $recentpost=false);
+		$galerias = $this->api_model_galeria->get_galerias($featured=false, $recentpost=false);
 
 		$posts = array();
 		if(!empty($galerias)){
@@ -41,7 +42,7 @@ class Api_Galeria extends CI_Controller {
 	{
 		header("Access-Control-Allow-Origin: *");
 
-		$galerias = $this->api_model->get_galerias($featured=true, $recentpost=false);
+		$galerias = $this->api_model_galeria->get_galerias($featured=true, $recentpost=false);
 
 		$posts = array();
 		if(!empty($galerias)){
@@ -66,7 +67,7 @@ class Api_Galeria extends CI_Controller {
 	{
 		header("Access-Control-Allow-Origin: *");
 		
-		$galeria = $this->api_model->get_galeria($id);
+		$galeria = $this->api_model_galeria->get_galeria($id);
 
 
 		$post = array(
@@ -85,7 +86,7 @@ class Api_Galeria extends CI_Controller {
 	{
 		header("Access-Control-Allow-Origin: *");
 
-		$galerias = $this->api_model->get_galerias($featured=false, $recentpost=5);
+		$galerias = $this->api_model_galeria->get_galerias($featured=false, $recentpost=5);
 
 		$posts = array();
 		if(!empty($galerias)){
@@ -122,7 +123,7 @@ class Api_Galeria extends CI_Controller {
 
 		$posts = array();
 		if($isValidToken) {
-			$galerias = $this->api_model->get_admin_galerias();
+			$galerias = $this->api_model_galeria->get_admin_galerias();
 			foreach($galerias as $galeria) {
 				$posts[] = array(
 					'id' => $galeria->id,
@@ -150,7 +151,7 @@ class Api_Galeria extends CI_Controller {
 
 		if($isValidToken) {
 
-			$galeria = $this->api_model->get_admin_galeria($id);
+			$galeria = $this->api_model_galeria->get_admin_galeria($id);
 
 			$post = array(
 				'id' => $galeria->id,
@@ -214,7 +215,7 @@ class Api_Galeria extends CI_Controller {
 					'created_at' => date('Y-m-d H:i:s', time())
 				);
 
-				$id = $this->api_model->insertGaleria($galeriaData);
+				$id = $this->api_model_galeria->insertGaleria($galeriaData);
 
 				$response = array(
 					'status' => 'success'
@@ -240,7 +241,7 @@ class Api_Galeria extends CI_Controller {
 
 		if($isValidToken) {
 
-			$galeria = $this->api_model->get_admin_galeria($id);
+			$galeria = $this->api_model_galeria->get_admin_galeria($id);
 			$filename = $galeria->image;
 
 
@@ -283,7 +284,7 @@ class Api_Galeria extends CI_Controller {
 					'image' => $filename,
 				);
 
-				$this->api_model->updateGaleria($id, $galeriaData);
+				$this->api_model_galeria->updateGaleria($id, $galeriaData);
 
 				$response = array(
 					'status' => 'success'
@@ -309,14 +310,14 @@ class Api_Galeria extends CI_Controller {
 
 		if($isValidToken) {
 
-			$galeria = $this->api_model->get_admin_galeria($id);
+			$galeria = $this->api_model_galeria->get_admin_galeria($id);
 
 			if($galeria->image && file_exists(FCPATH.'media/images/galeria/'.$galeria->image))
 			{
 				unlink(FCPATH.'media/images/galeria/'.$galeria->image);
 			}
 
-			$this->api_model->deleteGaleria($id);
+			$this->api_model_galeria->deleteGaleria($id);
 
 			$response = array(
 				'status' => 'success'

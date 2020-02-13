@@ -7,6 +7,7 @@ class Api_Banhorizontal extends CI_Controller {
 	{
 		parent::__construct();
 		$this->load->model('api_model');
+		$this->load->model('api_model_banhorizontal');
 		$this->load->helper('url');
 		$this->load->helper('text');
 	}
@@ -17,7 +18,7 @@ public function banhorizontals()
 {
 	header("Access-Control-Allow-Origin: *");
 
-	$banhorizontals = $this->api_model->get_banhorizontals($featured=false, $recentpost=false);
+	$banhorizontals = $this->api_model_banhorizontal->get_banhorizontals($featured=false, $recentpost=false);
 
 	$posts = array();
 	if(!empty($banhorizontals)){
@@ -29,6 +30,7 @@ public function banhorizontals()
 				'titulo' => $banhorizontal->titulo,
 				'target' => $banhorizontal->target,
 				'enlace' => $banhorizontal->enlace,
+				'is_active' => $banhorizontal->is_active,
 				'image' => base_url('media/images/ads/horizontal/'.$banhorizontal->image),
 				'created_at' => $banhorizontal->created_at
 			);
@@ -44,7 +46,7 @@ public function featured_banhorizontals()
 {
 	header("Access-Control-Allow-Origin: *");
 
-	$banhorizontals = $this->api_model->get_banhorizontals($featured=true, $recentpost=false);
+	$banhorizontals = $this->api_model_banhorizontal->get_banhorizontals($featured=true, $recentpost=false);
 
 	$posts = array();
 	if(!empty($banhorizontals)){
@@ -56,6 +58,7 @@ public function featured_banhorizontals()
 				'titulo' => $banhorizontal->titulo,
 				'target' => $banhorizontal->target,
 				'enlace' => $banhorizontal->enlace,
+				'is_active' => $banhorizontal->is_active,
 				'image' => base_url('media/images/ads/horizontal/'.$banhorizontal->image),
 				'created_at' => $banhorizontal->created_at
 			);
@@ -71,7 +74,7 @@ public function banhorizontal($id)
 {
 	header("Access-Control-Allow-Origin: *");
 	
-	$banhorizontal = $this->api_model->get_banhorizontal($id);
+	$banhorizontal = $this->api_model_banhorizontal->get_banhorizontal($id);
 
 
 	$post = array(
@@ -79,6 +82,7 @@ public function banhorizontal($id)
 		'titulo' => $banhorizontal->titulo,
 		'target' => $banhorizontal->target,
 		'enlace' => $banhorizontal->enlace,
+		'is_active' => $banhorizontal->is_active,
 		'image' => base_url('media/images/ads/horizontal/'.$banhorizontal->image),
 		'created_at' => $banhorizontal->created_at
 	);
@@ -92,7 +96,7 @@ public function recent_banhorizontals()
 {
 	header("Access-Control-Allow-Origin: *");
 
-	$banhorizontals = $this->api_model->get_banhorizontals($featured=false, $recentpost=5);
+	$banhorizontals = $this->api_model_banhorizontal->get_banhorizontals($featured=false, $recentpost=5);
 
 	$posts = array();
 	if(!empty($banhorizontals)){
@@ -104,6 +108,7 @@ public function recent_banhorizontals()
 				'titulo' => $banhorizontal->titulo,
 				'target' => $banhorizontal->target,
 				'enlace' => $banhorizontal->enlace,
+				'is_active' => $banhorizontal->is_active,
 				'image' => base_url('media/images/ads/horizontal/'.$banhorizontal->image),
 				'created_at' => $banhorizontal->created_at
 			);
@@ -131,13 +136,14 @@ public function adminBanhorizontals()
 
 	$posts = array();
 	if($isValidToken) {
-		$banhorizontals = $this->api_model->get_admin_banhorizontals();
+		$banhorizontals = $this->api_model_banhorizontal->get_admin_banhorizontals();
 		foreach($banhorizontals as $banhorizontal) {
 			$posts[] = array(
 				'id' => $banhorizontal->id,
 				'titulo' => $banhorizontal->titulo,
 				'target' => $banhorizontal->target,
 				'enlace' => $banhorizontal->enlace,
+				'is_active' => $banhorizontal->is_active,
 				'image' => base_url('media/images/ads/horizontal/'.$banhorizontal->image),
 				'created_at' => $banhorizontal->created_at
 			);
@@ -161,7 +167,7 @@ public function adminBanhorizontal($id)
 
 	if($isValidToken) {
 
-		$banhorizontal = $this->api_model->get_admin_banhorizontal($id);
+		$banhorizontal = $this->api_model_banhorizontal->get_admin_banhorizontal($id);
 
 		$post = array(
 			'id' => $banhorizontal->id,
@@ -234,7 +240,7 @@ public function createBanhorizontal()
 				'created_at' => date('Y-m-d H:i:s', time())
 			);
 
-			$id = $this->api_model->insertBanhorizontal($banhorizontalData);
+			$id = $this->api_model_banhorizontal->insertBanhorizontal($banhorizontalData);
 
 			$response = array(
 				'status' => 'success'
@@ -260,7 +266,7 @@ public function updateBanhorizontal($id)
 
 	if($isValidToken) {
 
-		$banhorizontal = $this->api_model->get_admin_banhorizontal($id);
+		$banhorizontal = $this->api_model_banhorizontal->get_admin_banhorizontal($id);
 		$filename = $banhorizontal->image;
 
 
@@ -309,7 +315,7 @@ public function updateBanhorizontal($id)
 				'is_active' => $is_active
 			);
 
-			$this->api_model->updateBanhorizontal($id, $banhorizontalData);
+			$this->api_model_banhorizontal->updateBanhorizontal($id, $banhorizontalData);
 
 			$response = array(
 				'status' => 'success'
@@ -335,14 +341,14 @@ public function deleteBanhorizontal($id)
 
 	if($isValidToken) {
 
-		$banhorizontal = $this->api_model->get_admin_banhorizontal($id);
+		$banhorizontal = $this->api_model_banhorizontal->get_admin_banhorizontal($id);
 
 		if($banhorizontal->image && file_exists(FCPATH.'media/images/ads/horizontal/'.$banhorizontal->image))
 		{
 			unlink(FCPATH.'media/images/ads/horizontal/'.$banhorizontal->image);
 		}
 
-		$this->api_model->deleteBanhorizontal($id);
+		$this->api_model_banhorizontal->deleteBanhorizontal($id);
 
 		$response = array(
 			'status' => 'success'
